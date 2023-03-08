@@ -1,0 +1,4 @@
+its:
+  unisocket:
+    server:
+      impl-class: cn.linliangjun.its.unisocket.server.impl.NettyTcpServer

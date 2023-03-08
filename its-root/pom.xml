@@ -40,11 +40,50 @@
         </developer>
     </developers>
 
+    <modules>
+        <module>its-unisocket</module>
+        <module>its-unisocket-spring-boot-starter</module>
+    </modules>
+
     <properties>
         <encoding>UTF-8</encoding>
         <java.version>8</java.version>
+        <mina.version>2.2.1</mina.version>
+        <hutool.version>5.8.11</hutool.version>
+        <spring-boot.version>2.7.7</spring-boot.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.mina</groupId>
+                <artifactId>mina-core</artifactId>
+                <version>${mina.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>cn.linliangjun.its</groupId>
+                <artifactId>its-unisocket</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -60,6 +99,23 @@
                         <source>${java.version}</source>                <!-- 提供与指定发行版的源兼容性 -->
                         <target>${java.version}</target>                <!-- 生成特定 VM 版本的类文件 -->
                         <parameters>true</parameters>                   <!-- 生成元数据以用于方法参数的反射 -->
+                    </configuration>
+                </plugin>
+
+                <!-- 测试插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+
+                <!-- 资源插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                    <configuration>
+                        <encoding>${encoding}</encoding>
                     </configuration>
                 </plugin>
             </plugins>
