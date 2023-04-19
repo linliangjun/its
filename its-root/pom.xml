@@ -43,12 +43,16 @@
     <modules>
         <module>its-unisocket</module>
         <module>its-unisocket-spring-boot-starter</module>
+        <module>its-uniprotocol</module>
+        <module>its-uniprotocol-spring-boot-starter</module>
+        <module>its-jt808-protocol</module>
     </modules>
 
     <properties>
         <encoding>UTF-8</encoding>
         <java.version>8</java.version>
         <mina.version>2.2.1</mina.version>
+        <dom4j.version>2.1.4</dom4j.version>
         <hutool.version>5.8.11</hutool.version>
         <spring-boot.version>2.7.7</spring-boot.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
@@ -71,6 +75,11 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>org.dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
@@ -80,6 +89,26 @@
             <dependency>
                 <groupId>cn.linliangjun.its</groupId>
                 <artifactId>its-unisocket</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.linliangjun.its</groupId>
+                <artifactId>its-unisocket-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.linliangjun.its</groupId>
+                <artifactId>its-uniprotocol</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.linliangjun.its</groupId>
+                <artifactId>its-uniprotocol-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.linliangjun.its</groupId>
+                <artifactId>its-jt808-protocol</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
