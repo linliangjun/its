@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.uniprotocol;
+package cn.linliangjun.its.jt808.protocol;
 
-public class DuplicateProtocolException extends RuntimeException{
+/**
+ * JT/T 808 版本
+ *
+ * @author linliangjun
+ */
+public enum Version {
 
-    private static final long serialVersionUID = -6771645276947447082L;
+    V2011,
+    V2013,
+    V2019;
 
-    public DuplicateProtocolException(Protocol protocol) {
-        super(String.format("协议 %s 已注册，无法再次注册", protocol));
+    public static Version valueOf(int ordinal) {
+        return values()[ordinal];
     }
 }

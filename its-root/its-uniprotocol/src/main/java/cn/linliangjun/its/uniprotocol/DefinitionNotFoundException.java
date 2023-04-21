@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.jt808.protocol;
+package cn.linliangjun.its.uniprotocol;
 
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
-import cn.linliangjun.its.uniprotocol.AnnotationDefinitionLoader;
+public class DefinitionNotFoundException extends RuntimeException {
 
-public class DefinitionLoaderProvider implements cn.linliangjun.its.uniprotocol.DefinitionLoaderProvider<AnnotationDefinitionLoader> {
+    private static final long serialVersionUID = 2800408867380837533L;
 
-    private final AnnotationDefinitionLoader loader;
-
-    public DefinitionLoaderProvider() {
-        loader = new AnnotationDefinitionLoader(AbstractMessage.class.getPackage().getName());
-    }
-
-    @Override
-    public AnnotationDefinitionLoader get() {
-        return loader;
+    public DefinitionNotFoundException(String message) {
+        super(message);
     }
 }

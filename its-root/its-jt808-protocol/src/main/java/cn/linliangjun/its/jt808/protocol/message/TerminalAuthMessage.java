@@ -16,6 +16,10 @@
 
 package cn.linliangjun.its.jt808.protocol.message;
 
+import cn.linliangjun.its.jt808.protocol.Version;
+import cn.linliangjun.its.jt808.protocol.codec.TerminalAuthMessageCodec;
+import cn.linliangjun.its.uniprotocol.Message;
+import cn.linliangjun.its.uniprotocol.Protocol;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +33,7 @@ import java.util.StringJoiner;
 public abstract class TerminalAuthMessage extends AbstractMessage {
 
     public TerminalAuthMessage(Version version) {
-        super(0x0102, version);
+        super(Type.TERMINAL_AUTH, version);
     }
 
     /**
@@ -39,6 +43,8 @@ public abstract class TerminalAuthMessage extends AbstractMessage {
      */
     @Getter
     @Setter
+    @Protocol(name = "JT/T808", version = {"V2011", "V2013"})
+    @Message(id = 0x0102, name = "终端鉴权", codecClass = TerminalAuthMessageCodec.class)
     public static final class TerminalAuthMessage_2011_2013 extends TerminalAuthMessage {
 
         /**
@@ -48,11 +54,6 @@ public abstract class TerminalAuthMessage extends AbstractMessage {
 
         public TerminalAuthMessage_2011_2013(Version version) {
             super(version);
-        }
-
-        @Override
-        protected String getCompatibleVersions() {
-            return "V2011, V2013";
         }
 
         @Override
@@ -70,6 +71,8 @@ public abstract class TerminalAuthMessage extends AbstractMessage {
      */
     @Getter
     @Setter
+    @Protocol(name = "JT/T808", version = "V2019")
+    @Message(id = 0x0102, name = "终端鉴权", codecClass = TerminalAuthMessageCodec.class)
     public static final class TerminalAuthMessage_2019 extends TerminalAuthMessage {
 
         /**
@@ -89,11 +92,6 @@ public abstract class TerminalAuthMessage extends AbstractMessage {
 
         public TerminalAuthMessage_2019() {
             super(Version.V2019);
-        }
-
-        @Override
-        protected String getCompatibleVersions() {
-            return "V2019";
         }
 
         @Override

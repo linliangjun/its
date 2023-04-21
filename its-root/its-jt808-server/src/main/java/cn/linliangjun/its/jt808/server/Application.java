@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.jt808.protocol;
+package cn.linliangjun.its.jt808.server;
 
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
-import cn.linliangjun.its.uniprotocol.AnnotationDefinitionLoader;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public class DefinitionLoaderProvider implements cn.linliangjun.its.uniprotocol.DefinitionLoaderProvider<AnnotationDefinitionLoader> {
+@SpringBootApplication
+public class Application {
 
-    private final AnnotationDefinitionLoader loader;
-
-    public DefinitionLoaderProvider() {
-        loader = new AnnotationDefinitionLoader(AbstractMessage.class.getPackage().getName());
-    }
-
-    @Override
-    public AnnotationDefinitionLoader get() {
-        return loader;
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 }

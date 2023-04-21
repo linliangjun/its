@@ -14,21 +14,33 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.jt808.protocol;
+package cn.linliangjun.its.uniprotocol;
 
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
-import cn.linliangjun.its.uniprotocol.AnnotationDefinitionLoader;
+import cn.hutool.core.util.ReflectUtil;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-public class DefinitionLoaderProvider implements cn.linliangjun.its.uniprotocol.DefinitionLoaderProvider<AnnotationDefinitionLoader> {
+@RequiredArgsConstructor
+public class MessageDefinition {
 
-    private final AnnotationDefinitionLoader loader;
+    @NonNull
+    @Getter
+    private final Integer id;
 
-    public DefinitionLoaderProvider() {
-        loader = new AnnotationDefinitionLoader(AbstractMessage.class.getPackage().getName());
-    }
+    @NonNull
+    @Getter
+    private final String name;
 
-    @Override
-    public AnnotationDefinitionLoader get() {
-        return loader;
+    @NonNull
+    @Getter
+    private final Class<?> messageClass;
+
+    @NonNull
+    private final Class<?> codecClass;
+
+    @SuppressWarnings("unchecked")
+    public <P extends ProtocolDefinition, M> Codec<P, M> getCodec() {
+        return (Codec<P, M>) ReflectUtil.newInstance(codecClass);
     }
 }

@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.jt808.protocol;
+package cn.linliangjun.its.uniprotocol.util;
 
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
-import cn.linliangjun.its.uniprotocol.AnnotationDefinitionLoader;
+import lombok.Data;
 
-public class DefinitionLoaderProvider implements cn.linliangjun.its.uniprotocol.DefinitionLoaderProvider<AnnotationDefinitionLoader> {
+@Data
+public class Segment {
 
-    private final AnnotationDefinitionLoader loader;
-
-    public DefinitionLoaderProvider() {
-        loader = new AnnotationDefinitionLoader(AbstractMessage.class.getPackage().getName());
-    }
-
-    @Override
-    public AnnotationDefinitionLoader get() {
-        return loader;
-    }
+    private final int base;
+    private final int len;
 }

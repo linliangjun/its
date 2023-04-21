@@ -16,14 +16,13 @@
 
 package cn.linliangjun.its.jt808.protocol;
 
-import cn.linliangjun.its.jt808.protocol.message.Version;
 import lombok.NonNull;
 
-public final class Protocol extends cn.linliangjun.its.uniprotocol.Protocol {
+public final class ProtocolDefinition extends cn.linliangjun.its.uniprotocol.ProtocolDefinition {
 
-    public static final String NAME = "JT808";
+    public static final String NAME = "JT/T808";
 
-    public Protocol(@NonNull Version version) {
+    public ProtocolDefinition(@NonNull Version version) {
         super(NAME, version.name());
     }
 }

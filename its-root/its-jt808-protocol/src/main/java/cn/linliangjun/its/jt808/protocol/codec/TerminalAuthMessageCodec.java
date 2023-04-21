@@ -17,7 +17,7 @@
 package cn.linliangjun.its.jt808.protocol.codec;
 
 import cn.linliangjun.its.jt808.protocol.message.TerminalAuthMessage;
-import cn.linliangjun.its.jt808.protocol.message.Version;
+import cn.linliangjun.its.jt808.protocol.Version;
 import cn.linliangjun.its.uniprotocol.util.CodecUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.var;
@@ -90,7 +90,6 @@ public class TerminalAuthMessageCodec extends AbstractCodec<TerminalAuthMessage>
             default:
                 throw new IllegalArgumentException("未适配的版本：" + version);
         }
-
     }
 
     private void decodeBodyV2011_2013(TerminalAuthMessage_2011_2013 message, ByteBuf buf) {

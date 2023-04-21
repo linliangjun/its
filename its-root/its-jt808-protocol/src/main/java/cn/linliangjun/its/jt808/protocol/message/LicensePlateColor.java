@@ -14,20 +14,36 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.uniprotocol;
+package cn.linliangjun.its.jt808.protocol.message;
 
-import cn.hutool.core.io.resource.ClassPathResource;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.var;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+/**
+ * 车牌颜色枚举
+ *
+ * @author linliangjun
+ */
+@RequiredArgsConstructor
+public enum LicensePlateColor {
 
-@Slf4j
-public class ClasspathXmlDefinitionLoader extends XmlDefinitionLoader {
+    BLUE(1),
+    YELLOW(2),
+    BLACK(3),
+    WHITE(4),
+    GREEN(5),
+    OTHER(9);
 
-    public ClasspathXmlDefinitionLoader(String... classpath) {
-       super(Arrays.stream(classpath)
-               .map(cp -> new ClassPathResource(cp).getFile())
-               .collect(Collectors.toList()));
+    @Getter
+    private final int value;
+
+    public static LicensePlateColor getInstance(int value) {
+        for (var plateColor : LicensePlateColor.values()) {
+            if (plateColor.value == value) {
+                return plateColor;
+            }
+        }
+        return null;
     }
 }

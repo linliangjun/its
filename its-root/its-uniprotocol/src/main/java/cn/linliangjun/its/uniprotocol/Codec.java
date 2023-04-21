@@ -24,7 +24,7 @@ import io.netty.buffer.ByteBuf;
  * @param <P> 协议类型
  * @param <M> 消息类型
  */
-public interface Codec<P extends  Protocol, M> {
+public interface Codec<P extends ProtocolDefinition, M> {
 
     /**
      * 编码
@@ -38,10 +38,10 @@ public interface Codec<P extends  Protocol, M> {
     /**
      * 解码
      *
-     * @param protocol 协议
+     * @param protocolDefinition 协议
      * @param buf      字节缓冲区
      * @return 消息对象
      * @throws CodecException 解码异常
      */
-    M decode(P protocol, ByteBuf buf);
+    M decode(P protocolDefinition, ByteBuf buf);
 }

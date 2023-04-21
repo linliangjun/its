@@ -16,8 +16,8 @@
 
 package cn.linliangjun.its.jt808.protocol.codec;
 
-import cn.linliangjun.its.jt808.protocol.Protocol;
-import cn.linliangjun.its.jt808.protocol.message.Version;
+import cn.linliangjun.its.jt808.protocol.ProtocolDefinition;
+import cn.linliangjun.its.jt808.protocol.Version;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
 import lombok.var;
@@ -52,7 +52,7 @@ class TerminalAuthMessageCodecTest {
     @ValueSource(strings = {"0102402701000000000173550122220037034f42443132333435363738393031323334350000000000000000000000000000000000000000"})
     void decode(String hex) {
         var buf = ALLOCATOR.buffer().writeBytes(ByteBufUtil.decodeHexDump(hex));
-        var message = codec.decode(new Protocol(Version.V2019), buf);
+        var message = codec.decode(new ProtocolDefinition(Version.V2019), buf);
         System.out.println(message);
         buf.release();
     }

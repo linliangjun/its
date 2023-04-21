@@ -46,6 +46,7 @@
         <module>its-uniprotocol</module>
         <module>its-uniprotocol-spring-boot-starter</module>
         <module>its-jt808-protocol</module>
+        <module>its-jt808-server</module>
     </modules>
 
     <properties>

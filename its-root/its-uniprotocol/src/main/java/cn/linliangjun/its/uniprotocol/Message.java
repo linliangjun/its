@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.jt808.protocol;
+package cn.linliangjun.its.uniprotocol;
 
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
-import cn.linliangjun.its.uniprotocol.AnnotationDefinitionLoader;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class DefinitionLoaderProvider implements cn.linliangjun.its.uniprotocol.DefinitionLoaderProvider<AnnotationDefinitionLoader> {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Message {
 
-    private final AnnotationDefinitionLoader loader;
+    int id();
 
-    public DefinitionLoaderProvider() {
-        loader = new AnnotationDefinitionLoader(AbstractMessage.class.getPackage().getName());
-    }
+    String name();
 
-    @Override
-    public AnnotationDefinitionLoader get() {
-        return loader;
-    }
+    Class<? extends Codec<?, ?>> codecClass();
 }

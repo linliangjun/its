@@ -16,9 +16,9 @@
 
 package cn.linliangjun.its.jt808.protocol.message;
 
-import cn.hutool.core.util.ArrayUtil;
-import cn.linliangjun.its.uniprotocol.IncompatibleVersionException;
+import cn.linliangjun.its.jt808.protocol.Version;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.StringJoiner;
@@ -28,12 +28,13 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
+@RequiredArgsConstructor
 public abstract class AbstractMessage {
 
     /**
-     * 消息类型 ID
+     * 消息类型
      */
-    private final Integer typeId;
+    private final Type type;
 
     /**
      * 协议版本
@@ -76,27 +77,6 @@ public abstract class AbstractMessage {
     private Integer packageNum;
 
     /**
-     * 以消息类型 ID 和协议版本构造消息对象
-     *
-     * @param typeId  消息类型 ID
-     * @param version 协议版本
-     */
-    public AbstractMessage(Integer typeId, Version version) {
-        this.typeId = typeId;
-        String[] versions = getCompatibleVersions().split(", ");
-        String versionName = version.name();
-        if (!ArrayUtil.contains(versions, versionName)) {
-            throw new IncompatibleVersionException(getClass().getCanonicalName() + ": " + versionName);
-        }
-        this.version = version;
-    }
-
-    /**
-     * 获取兼容的版本，多个版本之间以 ", " 分开
-     */
-    protected abstract String getCompatibleVersions();
-
-    /**
      * 获取（消息体）描述
      *
      * @see #toString()
@@ -106,7 +86,7 @@ public abstract class AbstractMessage {
     @Override
     public final String toString() {
         String header = new StringJoiner(", ", "{", "}")
-                .add(String.format("typeId=%0#6x", typeId))
+                .add("type=" + type)
                 .add("version=" + version)
                 .add("bodyLength=" + bodyLength)
                 .add("encryption=" + encryption)

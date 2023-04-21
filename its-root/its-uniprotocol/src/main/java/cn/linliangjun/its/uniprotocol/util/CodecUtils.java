@@ -18,9 +18,10 @@ package cn.linliangjun.its.uniprotocol.util;
 
 import cn.linliangjun.its.uniprotocol.CodecException;
 import io.netty.buffer.ByteBuf;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.var;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CodecUtils {
@@ -99,5 +100,28 @@ public final class CodecUtils {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 获取 BCC 校验码
+     */
+    public static byte getBccCode(ByteBuf buf, int start, int len) {
+        byte code = 0;
+        for (int i = 0, j = start; i < len; i++, j++) {
+            code ^= buf.getByte(j);
+        }
+        return code;
+    }
+
+    public static List<Integer> getIndexes(ByteBuf buf, byte b) {
+        List<Integer> list = new ArrayList<>();
+        int formIndex = buf.readerIndex(), toIndex = buf.writerIndex();
+        int index = buf.indexOf(formIndex, toIndex, b);
+        while (index != -1) {
+            list.add(index);
+            formIndex = index + 1;
+            index = buf.indexOf(formIndex, toIndex, b);
+        }
+        return list;
     }
 }

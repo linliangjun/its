@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package cn.linliangjun.its.jt808.protocol.message;
+package cn.linliangjun.its.uniprotocol;
 
-/**
- * JT/T 808 版本
- *
- * @author linliangjun
- */
-public enum Version {
+public class DuplicateDefinitionException extends RuntimeException{
 
-    V2011,
-    V2013,
-    V2019;
+    private static final long serialVersionUID = -6771645276947447082L;
 
-    public static Version valueOf(int ordinal) {
-        return values()[ordinal];
+    public DuplicateDefinitionException(String message) {
+        super(message);
     }
 }

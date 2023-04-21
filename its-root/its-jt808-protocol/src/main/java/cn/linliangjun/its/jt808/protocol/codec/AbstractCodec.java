@@ -16,9 +16,9 @@
 
 package cn.linliangjun.its.jt808.protocol.codec;
 
-import cn.linliangjun.its.jt808.protocol.Protocol;
+import cn.linliangjun.its.jt808.protocol.ProtocolDefinition;
 import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
-import cn.linliangjun.its.jt808.protocol.message.Version;
+import cn.linliangjun.its.jt808.protocol.Version;
 import cn.linliangjun.its.uniprotocol.Codec;
 import cn.linliangjun.its.uniprotocol.CodecException;
 import cn.linliangjun.its.uniprotocol.util.CodecUtils;
@@ -36,7 +36,7 @@ import java.nio.charset.Charset;
  * @author linliangjun
  * @apiNote 编码时，不会添加消息头和尾的魔数，不会进行转义，不会增加 BCC 校验字；解码时，不会解析消息头和尾的魔数，不会进行转义，不会进行 BCC 校验
  */
-public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<Protocol, M> {
+public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<ProtocolDefinition, M> {
 
     protected static final Charset GBK = Charset.forName("GBK");
 
@@ -84,9 +84,9 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
     }
 
     @Override
-    public final M decode(Protocol protocol, ByteBuf buf) {
+    public final M decode(ProtocolDefinition protocolDefinition, ByteBuf buf) {
         try {
-            M message = getMessageTemplate(Version.valueOf(protocol.getVersion()));
+            M message = getMessageTemplate(Version.valueOf(protocolDefinition.getVersion()));
             DECODER.decodeHeader(message, buf);
             decodeBody(message, buf);
             return message;
@@ -98,7 +98,7 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
     private static final class Encoder {
 
         private void encodeHeader(AbstractMessage message, ByteBuf buf) {
-            buf.writeShort(message.getTypeId());
+            buf.writeShort(message.getType().getValue());
             buf.writeZero(2);           // 留空，等消息体编码后再进行编码
             encodeVersion(message, buf);
             encodeTerminalPhoneNum(message, buf);
