@@ -20,6 +20,8 @@ import cn.linliangjun.its.jt808.server.adapter.netty.*;
 import io.netty.channel.socket.SocketChannel;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 @Component
 public class ChannelInitializer extends io.netty.channel.ChannelInitializer<SocketChannel> {
 
@@ -31,14 +33,22 @@ public class ChannelInitializer extends io.netty.channel.ChannelInitializer<Sock
 
     private final MessageDecoder messageDecoder = new MessageDecoder();
 
+    private final MessageEncoder messageEncoder = new MessageEncoder();
+
+    @Resource
+    private MessageHandler messageHandler;
+
     @Override
     protected void initChannel(SocketChannel ch) {
+        // 入站是从上往下找入站处理器，出站是从下往上找出站处理器
         ch.pipeline()
                 .addLast(new FrameSplitter())
                 .addLast(escapeHandler)
                 .addLast(bccChecker)
                 .addLast(accessHandler)
                 .addLast(messageDecoder)
-                .addLast(new DiscardHandler());
+                .addLast(new DiscardHandler())
+                .addLast(messageEncoder)
+                .addLast(messageHandler);
     }
 }

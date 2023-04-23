@@ -27,7 +27,9 @@ import java.util.StringJoiner;
 public enum Type {
 
     TERMINAL_REGISTER(0x0100),
-    TERMINAL_AUTH(0x0102);
+    TERMINAL_AUTH(0x0102),
+    PLATFORM_GENERIC_RESP(0x8001),
+    TERMINAL_REGISTER_RESP(0x08100);
 
     @Getter
     private final int value;

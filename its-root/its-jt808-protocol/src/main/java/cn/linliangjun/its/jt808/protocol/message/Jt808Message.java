@@ -29,7 +29,7 @@ import java.util.StringJoiner;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public abstract class AbstractMessage {
+public abstract class Jt808Message {
 
     /**
      * 消息类型

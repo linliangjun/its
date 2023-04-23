@@ -17,7 +17,7 @@
 package cn.linliangjun.its.jt808.server.adapter.netty;
 
 import cn.linliangjun.its.jt808.protocol.ProtocolDefinition;
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
+import cn.linliangjun.its.jt808.protocol.message.Jt808Message;
 import cn.linliangjun.its.jt808.protocol.message.Type;
 import cn.linliangjun.its.uniprotocol.Codec;
 import cn.linliangjun.its.uniprotocol.CodecException;
@@ -26,11 +26,14 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.var;
 
+import static io.netty.channel.ChannelHandler.Sharable;
+
 /**
  * JT/T 808 消息解码器
  *
  * @author linliangjun
  */
+@Sharable
 public class MessageDecoder extends AbstractInboundByteBufWrapperHandler {
 
     public MessageDecoder() {
@@ -62,7 +65,7 @@ public class MessageDecoder extends AbstractInboundByteBufWrapperHandler {
             return;
         }
 
-        Codec<cn.linliangjun.its.uniprotocol.ProtocolDefinition, AbstractMessage> codec = messageDefinition.getCodec();
+        Codec<cn.linliangjun.its.uniprotocol.ProtocolDefinition, Jt808Message> codec = messageDefinition.getCodec();
 
         try {
             ByteBuf buf = wrapper.getBuf();
@@ -73,8 +76,8 @@ public class MessageDecoder extends AbstractInboundByteBufWrapperHandler {
                 buf.resetReaderIndex();
                 throw new CodecException("字节缓冲区未读取完");
             }
-            System.out.println(message);
             wrapper.release();
+            ctx.fireChannelRead(message);
         }catch (Exception e) {
             wrapper.discard("解码消息异常，具体原因：" + e.getMessage());
             ctx.fireChannelRead(wrapper);

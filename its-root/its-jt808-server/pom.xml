@@ -29,6 +29,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-integration</artifactId>
+        </dependency>
+        <dependency>
             <groupId>cn.linliangjun.its</groupId>
             <artifactId>its-unisocket-spring-boot-starter</artifactId>
         </dependency>

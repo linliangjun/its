@@ -42,10 +42,10 @@ public class DiscardHandler extends ChannelInboundHandlerAdapter {
                 log.warn("{} 入站流水线已结束，数据却仍未处理，默认丢弃。原始数据：{}", ctx.channel(), hexDump);
             }
         } else {
-            log.warn("未知的入站数据，默认丢弃。原始数据：{}", msg);
+            ctx.fireChannelRead(msg);
         }
         ReferenceCountUtil.release(msg);
-        if (discardCount > MAX_DISCARD_COUNT) {
+        if (discardCount >= MAX_DISCARD_COUNT) {
             log.info("{} 检测到大量异常数据，关闭连接...", channel);
             channel.close().awaitUninterruptibly();
         }

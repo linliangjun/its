@@ -17,7 +17,7 @@
 package cn.linliangjun.its.jt808.protocol.codec;
 
 import cn.linliangjun.its.jt808.protocol.ProtocolDefinition;
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
+import cn.linliangjun.its.jt808.protocol.message.Jt808Message;
 import cn.linliangjun.its.jt808.protocol.Version;
 import cn.linliangjun.its.uniprotocol.Codec;
 import cn.linliangjun.its.uniprotocol.CodecException;
@@ -34,9 +34,9 @@ import java.nio.charset.Charset;
  *
  * @param <M> JT 808 消息类型
  * @author linliangjun
- * @apiNote 编码时，不会添加消息头和尾的魔数，不会进行转义，不会增加 BCC 校验字；解码时，不会解析消息头和尾的魔数，不会进行转义，不会进行 BCC 校验
+ * @apiNote 编码时，不会进行转义；解码时，不会解析消息头和尾的魔数，不会进行转义，不会进行 BCC 校验
  */
-public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<ProtocolDefinition, M> {
+public abstract class AbstractCodec<M extends Jt808Message> implements Codec<ProtocolDefinition, M> {
 
     protected static final Charset GBK = Charset.forName("GBK");
 
@@ -71,11 +71,33 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
     @Override
     public final ByteBuf encode(M message) {
         var buf = ALLOCATOR.buffer(32);
+        buf.writeZero(1);       // 预留一个字节的头
         try {
             ENCODER.encodeHeader(message, buf);
             int startIndex = buf.writerIndex();
             encodeBody(message, buf);
             ENCODER.encodeBodyProperties(message, buf, startIndex);
+            byte code = CodecUtils.getBccCode(buf, buf.readerIndex() + 1, buf.writerIndex() - buf.readerIndex() - 1);
+            buf.writeByte(code);        // BCC 校验码
+            // 转义
+            var indexes = CodecUtils.getIndexes(buf, (byte) 0x7e);
+            indexes.addAll(CodecUtils.getIndexes(buf, (byte) 0x7d));
+            if (!indexes.isEmpty()) {
+                var bufCopy = ALLOCATOR.buffer(buf.writerIndex() + indexes.size());
+                int start = 0;
+                for (var index : indexes) {
+                    bufCopy.writeBytes(buf, start, index - start);
+                    byte b = buf.getByte(index);
+                    bufCopy.writeByte(0x7d);
+                    bufCopy.writeByte(b == 0x7d ? 1 : 2);
+                    start = index + 1;
+                }
+                bufCopy.writeBytes(buf, indexes.get(indexes.size() - 1));
+                buf.release();
+                buf = bufCopy;
+            }
+            buf.setByte(0, 0x7e);
+            buf.writeByte(0x7e);
             return buf;
         } catch (Exception e) {
             buf.release();
@@ -97,7 +119,7 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
 
     private static final class Encoder {
 
-        private void encodeHeader(AbstractMessage message, ByteBuf buf) {
+        private void encodeHeader(Jt808Message message, ByteBuf buf) {
             buf.writeShort(message.getType().getValue());
             buf.writeZero(2);           // 留空，等消息体编码后再进行编码
             encodeVersion(message, buf);
@@ -109,7 +131,7 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
             }
         }
 
-        private void encodeVersion(AbstractMessage message, ByteBuf buf) {
+        private void encodeVersion(Jt808Message message, ByteBuf buf) {
             var version = message.getVersion();
             switch (version) {
                 case V2011:
@@ -123,7 +145,7 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
             }
         }
 
-        private void encodeTerminalPhoneNum(AbstractMessage message, ByteBuf buf) {
+        private void encodeTerminalPhoneNum(Jt808Message message, ByteBuf buf) {
             var version = message.getVersion();
             int limit;
             switch (version) {
@@ -141,7 +163,7 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
             CodecUtils.writeMaxLenBytesFillHead(buf, bytes, limit, 0, "终端手机号");
         }
 
-        private void encodeBodyProperties(AbstractMessage message, ByteBuf buf, int startIndex) {
+        private void encodeBodyProperties(Jt808Message message, ByteBuf buf, int startIndex) {
             var version = message.getVersion();
             var sb = new StringBuilder(16)
                     .append("0")
@@ -164,13 +186,13 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
             String bin = Integer.toBinaryString(bodyLen);
             sb.append(StrUtils.zerofill(bin, 10));
             int i = Integer.parseInt(sb.toString(), 2);
-            buf.setShort(2, i);
+            buf.setShort(3, i);
         }
     }
 
     private static final class Decoder {
 
-        private void decodeHeader(AbstractMessage message, ByteBuf buf) {
+        private void decodeHeader(Jt808Message message, ByteBuf buf) {
             buf.skipBytes(2);
             decodeBodyProperties(message, buf);
             decodeVersion(message, buf);
@@ -182,23 +204,23 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
             }
         }
 
-        private void decodeBodyProperties(AbstractMessage message, ByteBuf buf) {
+        private void decodeBodyProperties(Jt808Message message, ByteBuf buf) {
             String bin = Integer.toBinaryString(buf.readUnsignedShort());
             bin = StrUtils.zerofill(bin, 16);
             message.setBodyLength(Integer.parseInt(bin.substring(6), 2));
             String subStr = bin.substring(3, 6);
             if (subStr.equals("000")) {
-                message.setEncryption(AbstractMessage.Encryption.NONE);
+                message.setEncryption(Jt808Message.Encryption.NONE);
             } else if (subStr.equals("001")) {
-                message.setEncryption(AbstractMessage.Encryption.RSA);
+                message.setEncryption(Jt808Message.Encryption.RSA);
             } else {
-                message.setEncryption(AbstractMessage.Encryption.RESERVE);
+                message.setEncryption(Jt808Message.Encryption.RESERVE);
             }
             subStr = bin.substring(2, 3);
             message.setPartial(subStr.equals("1"));
         }
 
-        private void decodeVersion(AbstractMessage message, ByteBuf buf) {
+        private void decodeVersion(Jt808Message message, ByteBuf buf) {
             var version = message.getVersion();
             int ordinal = version.ordinal();
             if (ordinal < Version.V2019.ordinal()) {
@@ -210,7 +232,7 @@ public abstract class AbstractCodec<M extends AbstractMessage> implements Codec<
             }
         }
 
-        private void decodeTerminalPhoneNum(AbstractMessage message, ByteBuf buf) {
+        private void decodeTerminalPhoneNum(Jt808Message message, ByteBuf buf) {
             var version = message.getVersion();
             int len;
             switch (version) {

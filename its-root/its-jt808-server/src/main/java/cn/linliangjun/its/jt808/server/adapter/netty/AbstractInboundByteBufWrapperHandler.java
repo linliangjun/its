@@ -50,6 +50,4 @@ public abstract class AbstractInboundByteBufWrapperHandler extends SimpleChannel
             }
         }
     }
-
-    protected abstract void channelRead0(ChannelHandlerContext ctx, ByteBufWrapper wrapper) throws Exception;
 }

@@ -30,7 +30,7 @@ import java.util.StringJoiner;
  *
  * @author linliangjun
  */
-public abstract class TerminalAuthMessage extends AbstractMessage {
+public abstract class TerminalAuthMessage extends Jt808Message {
 
     public TerminalAuthMessage(Version version) {
         super(Type.TERMINAL_AUTH, version);

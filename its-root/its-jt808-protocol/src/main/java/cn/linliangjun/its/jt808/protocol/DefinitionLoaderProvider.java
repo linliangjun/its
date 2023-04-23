@@ -16,7 +16,7 @@
 
 package cn.linliangjun.its.jt808.protocol;
 
-import cn.linliangjun.its.jt808.protocol.message.AbstractMessage;
+import cn.linliangjun.its.jt808.protocol.message.Jt808Message;
 import cn.linliangjun.its.uniprotocol.AnnotationDefinitionLoader;
 
 public class DefinitionLoaderProvider implements cn.linliangjun.its.uniprotocol.DefinitionLoaderProvider<AnnotationDefinitionLoader> {
@@ -24,7 +24,7 @@ public class DefinitionLoaderProvider implements cn.linliangjun.its.uniprotocol.
     private final AnnotationDefinitionLoader loader;
 
     public DefinitionLoaderProvider() {
-        loader = new AnnotationDefinitionLoader(AbstractMessage.class.getPackage().getName());
+        loader = new AnnotationDefinitionLoader(Jt808Message.class.getPackage().getName());
     }
 
     @Override

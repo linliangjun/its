@@ -21,11 +21,14 @@ import cn.linliangjun.its.jt808.protocol.message.Type;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.var;
 
+import static io.netty.channel.ChannelHandler.Sharable;
+
 /**
  * JT/T 808 准入处理器
  *
  * @author linliangjun
  */
+@Sharable
 public class AccessHandler extends AbstractInboundByteBufWrapperHandler {
 
     public AccessHandler() {
@@ -68,7 +71,7 @@ public class AccessHandler extends AbstractInboundByteBufWrapperHandler {
         }
         if (!ChannelAttrUtils.login(ctx)) {
             wrapper.discard("终端未鉴权");
-            ctx.fireChannelRead(wrapper);
         }
+        ctx.fireChannelRead(wrapper);
     }
 }

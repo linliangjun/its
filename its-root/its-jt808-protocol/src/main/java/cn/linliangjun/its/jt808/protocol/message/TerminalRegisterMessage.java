@@ -30,7 +30,7 @@ import java.util.StringJoiner;
  *
  * @author linliangjun
  */
-public abstract class TerminalRegisterMessage extends AbstractMessage {
+public abstract class TerminalRegisterMessage extends Jt808Message {
 
     public TerminalRegisterMessage(Version version) {
         super(Type.TERMINAL_REGISTER, version);
